@@ -33,5 +33,5 @@ func commonPrefix(a, b string) string {
 			break
 		}
 	}
-	return a[0 : i+1]
+	return a[0:i]
 }
