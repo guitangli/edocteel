@@ -1,4 +1,7 @@
 import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.*;
 
 class Solution {
     public String longestCommonPrefix(String[] strs) {
@@ -40,7 +43,7 @@ class Solution {
 }
 
 class TrieNode {
-    private HashMap<Character, TrieNode> childrenMap;
+    public HashMap<Character, TrieNode> childrenMap;
     private boolean isEnd;
 
     public TrieNode() {
@@ -103,13 +106,44 @@ class Trie {
     }
 
     public boolean search(String str) {
-        TrieNode curr = searchPrefix(str);
-        return curr != null && curr.isEnd();
+        TrieNode node = searchPrefix(str);
+        return node != null && node.isEnd();
     }
 
     public boolean startsWith(String str) {
-        TrieNode curr = searchPrefix(str);
-        return curr != null;
+        TrieNode node = searchPrefix(str);
+        return node != null;
+    }
+
+    public List<String> getAllWithPrefix(String str) {
+        TrieNode node = searchPrefix(str);
+        if (node == null) {
+            return null;
+        }
+        return getAllByNode(node, str);
+    }
+
+    public List<String> getAllByNode(TrieNode node, String prefix) {
+        List<String> list = new ArrayList<String>();
+        StringBuffer str = new StringBuffer(prefix);
+        recursiveTraverse(node, str, list);
+        return list;
+    }
+
+    private void recursiveTraverse(TrieNode node, StringBuffer str, List<String> list) {
+        if (node.isEnd()) {
+            list.add(str.toString());
+            return;
+        }
+        for (Map.Entry pair : node.childrenMap.entrySet()) {
+            Character key = (Character) pair.getKey();
+            TrieNode child = (TrieNode) pair.getValue();
+            if (child != null) {
+                str.append(key);
+                recursiveTraverse(child, str, list);
+                str = str.deleteCharAt(str.length() - 1);
+            }
+        }
     }
 
     public void delete(String str) {
@@ -123,9 +157,14 @@ class Test {
 
         // Your Trie object will be instantiated and called as such:
         Trie obj = new Trie();
-        obj.insert("word");
-        boolean param_2 = obj.search("word");
-        boolean param_3 = obj.startsWith("prefix");
+        obj.insert("lword");
+        obj.insert("ltiantiankuaile");
+        obj.insert("lwoaini");
+        obj.insert("lwomenlove");
+        boolean param_2 = obj.search("lword");
+        boolean param_3 = obj.startsWith("lprefix");
+        List<String> out = obj.getAllWithPrefix("");
+        System.out.print(out);
 
     }
 }
